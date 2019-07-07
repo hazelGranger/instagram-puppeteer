@@ -15,6 +15,7 @@ export const crawlIns = async (name) => {
         await page.waitForSelector('.-vDIg')
         const title = await page.$eval('.rhpdm', ele => ele.innerText)
         const description = await page.$eval('.-vDIg span', ele => ele.innerText)
+        const avatar = await page.$eval('._6q-tv', ele => ele.src)
         const images = await page.$$eval('.KL4Bh img', img => img.map(ele => ele.src))
 
         console.log(title, description, images);
@@ -25,6 +26,7 @@ export const crawlIns = async (name) => {
         resolve({
           title,
           description,
+          avatar,
           images
         })
 
