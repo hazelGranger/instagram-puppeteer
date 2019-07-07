@@ -36,7 +36,7 @@ router.get('/:id', async (ctx, next) => {
   const insObj = await crawlIns(name)
   console.log(insObj);
   ctx.response.type = 'json'
-  ctx.response.body = {abc: insObj}
+  ctx.response.body = insObj
 })
 
 app.use(router.routes())
