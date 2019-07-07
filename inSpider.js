@@ -4,29 +4,36 @@ const CHROME = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.
 const BANK_NAME = 'BC'
 
 export const crawlIns = async (name) => {
-  try {
-      const browser = await puppeteer.launch({headless: true})
-      const page = await browser.newPage()
-      page.setUserAgent(CHROME)
-      page.setViewport({width: 1200, height: 1000})
+  return new Promise(async function(resolve, reject) {
+    try {
+        const browser = await puppeteer.launch({headless: true})
+        const page = await browser.newPage()
+        page.setUserAgent(CHROME)
+        page.setViewport({width: 1200, height: 1000})
 
-      await page.goto(`https://www.instagram.com/${name}/`)
-      await page.waitForSelector('.-vDIg')
-      const title = await page.$eval('.rhpdm', ele => ele.innerText)
-      const description = await page.$eval('.-vDIg span', ele => ele.innerText)
+        await page.goto(`https://www.instagram.com/${name}/`)
+        await page.waitForSelector('.-vDIg')
+        const title = await page.$eval('.rhpdm', ele => ele.innerText)
+        const description = await page.$eval('.-vDIg span', ele => ele.innerText)
+        const images = await page.$$eval('.KL4Bh img', img => img.map(ele => ele.src))
 
-      console.log(title, description);
+        console.log(title, description, images);
+        // const users = await page.evaluate((sel) => {
+        //   const $els = document.querySelector(sel);
+        //   console.log($els.innerText);
+        // }, TITLE);
+        resolve({
+          title,
+          description,
+          images
+        })
 
-      // const users = await page.evaluate((sel) => {
-      //   const $els = document.querySelector(sel);
-      //   console.log($els.innerText);
-      // }, TITLE);
+        setTimeout(async ()=> {
+          await browser.close()
+        }, 5000)
 
-      setTimeout(async ()=> {
-        await browser.close()
-      }, 5000)
-
-  } catch (e) {
-    console.log(e)
-  }
+    } catch (e) {
+      console.log(e)
+    }
+  })
 }

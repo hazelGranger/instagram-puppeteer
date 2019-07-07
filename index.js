@@ -26,9 +26,21 @@ app.use(BodyParser({
 }))
 
 const port = 9093
-const db_url = 'mongodb://localhost:27017/instagram'
+// const db_url = 'mongodb://localhost:27017/instagram'
 
-crawlIns('codeagardenwithstars')
+// crawlIns('codeagardenwithstars')
+// const insObj = await crawlIns('codeagardenwithstars')
+router.get('/:id', async (ctx, next) => {
+  console.log(ctx.request.url);
+  const name = ctx.request.url.replace(/\//g,'')
+  const insObj = await crawlIns(name)
+  console.log(insObj);
+  ctx.response.type = 'json'
+  ctx.response.body = {abc: insObj}
+})
+
+app.use(router.routes())
+app.use(router.allowedMethods())
 
 app.listen(port, () => {
   console.log(`Server started on ${port}`)
